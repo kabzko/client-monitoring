@@ -170,7 +170,7 @@
 
     <!-- Update Client Details Modal -->
     <div
-      v-if="showUpdateClientDetailsModal"
+      v-if="showUpdateClientDetailsModal && selectedClient"
       class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       @click.self="closeUpdateClientDetailsModal"
     >
