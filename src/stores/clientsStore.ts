@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { clientsService, type Client, type AssignConsultantPayload, type UnassignConsultantPayload } from '@/services/clientsService'
+import {
+  clientsService,
+  type Client,
+  type UpdateCleintDetailsPayload,
+} from '@/services/clientsService'
 
 export const useClientsStore = defineStore('clients', () => {
   const clients = ref<Client[]>([])
@@ -19,36 +23,14 @@ export const useClientsStore = defineStore('clients', () => {
     }
   }
 
-  async function assignConsultant(consultantId: number, payload: AssignConsultantPayload) {
+  async function updateClientDetails(clientId: number, payload: UpdateCleintDetailsPayload) {
     loading.value = true
     error.value = null
     try {
-      const updatedClient = await clientsService.assignConsultant(consultantId, payload)
-      const index = clients.value.findIndex(c => c.id === payload.company_id)
-      if (index !== -1) {
-        clients.value[index] = updatedClient
-      }
+      const updatedClient = await clientsService.updateClientDetails(clientId, payload)
       return updatedClient
     } catch (err: any) {
-      error.value = err.message || 'Failed to assign consultant'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function unassignConsultant(consultantId: number, payload: UnassignConsultantPayload) {
-    loading.value = true
-    error.value = null
-    try {
-      const updatedClient = await clientsService.unassignConsultant(consultantId, payload)
-      const index = clients.value.findIndex(c => c.id === payload.company_id)
-      if (index !== -1) {
-        clients.value[index] = updatedClient
-      }
-      return updatedClient
-    } catch (err: any) {
-      error.value = err.message || 'Failed to unassign consultant'
+      error.value = err.message || 'Failed to update client details'
       throw err
     } finally {
       loading.value = false
@@ -60,7 +42,6 @@ export const useClientsStore = defineStore('clients', () => {
     loading,
     error,
     fetchClients,
-    assignConsultant,
-    unassignConsultant
+    updateClientDetails,
   }
 })

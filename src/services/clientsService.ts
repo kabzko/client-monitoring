@@ -5,20 +5,37 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 export interface Client {
   id: number
   name: string
-  email: string
-  is_active: boolean
-  assigned_consultant?: number | null
-  assigned_consultant_name?: string | null
-  assigned_consultant_date?: string | null
+  is_employee_profile_imported: boolean
+  has_company: boolean
+  has_docs: boolean
+  has_training: boolean
+  has_utc: boolean
+  has_am_1q: boolean
+  has_am_2q: boolean
+  is_confirmation_sent: boolean
+  original_start_date: string
+  lock_in_period_date: string
+  contract_status: string
+  status: string
+  assigned_consultant_id: number
+  assigned_consultant_name: string
+  assigned_consultant_date: string
 }
 
-export interface AssignConsultantPayload {
-  company_id: number
-  consultant_id: number
-}
-
-export interface UnassignConsultantPayload {
-  company_id: number
+export interface UpdateCleintDetailsPayload {
+  is_employee_profile_imported: boolean
+  has_company: boolean
+  has_docs: boolean
+  has_training: boolean
+  has_utc: boolean
+  has_am_1q: boolean
+  has_am_2q: boolean
+  is_confirmation_sent: boolean
+  original_start_date: string
+  lock_in_period_date: string
+  contract_status: string
+  status: string
+  assigned_consultant_id: number
 }
 
 export const clientsService = {
@@ -27,16 +44,11 @@ export const clientsService = {
     return response.data
   },
 
-  async assignConsultant(consultantId: number, payload: AssignConsultantPayload): Promise<Client> {
-    const response = await axios.post(`${API_URL}/assign-consultant/${consultantId}/`, payload)
-    return response.data
-  },
-
-  async unassignConsultant(
-    consultantId: number,
-    payload: UnassignConsultantPayload,
+  async updateClientDetails(
+    clientId: number,
+    payload: UpdateCleintDetailsPayload,
   ): Promise<Client> {
-    const response = await axios.post(`${API_URL}/unassign-consultant/${consultantId}/`, payload)
+    const response = await axios.put(`${API_URL}/update-client-details/${clientId}/`, payload)
     return response.data
   },
 }
