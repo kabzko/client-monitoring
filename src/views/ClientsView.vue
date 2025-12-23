@@ -117,34 +117,66 @@
                 {{ client.assigned_consultant_name || 'Unassigned' }}
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                <input type="checkbox" v-model="client.is_employee_profile_imported" disabled />
+                <input
+                  type="checkbox"
+                  class="h-5 w-5 accent-blue-600 pointer-events-none cursor-default"
+                  v-model="client.is_employee_profile_imported"
+                />
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                <input type="checkbox" v-model="client.has_company" disabled />
+                <input
+                  type="checkbox"
+                  class="h-5 w-5 accent-blue-600 pointer-events-none cursor-default"
+                  v-model="client.has_company"
+                />
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                <input type="checkbox" v-model="client.has_docs" disabled />
+                <input
+                  type="checkbox"
+                  class="h-5 w-5 accent-blue-600 pointer-events-none cursor-default"
+                  v-model="client.has_docs"
+                />
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                <input type="checkbox" v-model="client.has_training" disabled />
+                <input
+                  type="checkbox"
+                  class="h-5 w-5 accent-blue-600 pointer-events-none cursor-default"
+                  v-model="client.has_training"
+                />
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                <input type="checkbox" v-model="client.has_utc" disabled />
+                <input
+                  type="checkbox"
+                  class="h-5 w-5 accent-blue-600 pointer-events-none cursor-default"
+                  v-model="client.has_utc"
+                />
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                <input type="checkbox" v-model="client.has_am_1q" disabled />
+                <input
+                  type="checkbox"
+                  class="h-5 w-5 accent-blue-600 pointer-events-none cursor-default"
+                  v-model="client.has_am_1q"
+                />
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                <input type="checkbox" v-model="client.has_am_2q" disabled />
+                <input
+                  type="checkbox"
+                  class="h-5 w-5 accent-blue-600 pointer-events-none cursor-default"
+                  v-model="client.has_am_2q"
+                />
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                <input type="checkbox" v-model="client.is_confirmation_sent" disabled />
+                <input
+                  type="checkbox"
+                  class="h-5 w-5 accent-blue-600 pointer-events-none cursor-default"
+                  v-model="client.is_confirmation_sent"
+                />
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                {{ client.original_start_date }}
+                {{ formatDate(client.original_start_date) }}
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
-                {{ client.lock_in_period_date }}
+                {{ formatDate(client.lock_in_period_date) }}
               </td>
               <td class="px-2 py-2 text-center whitespace-nowrap text-sm text-gray-500">
                 {{ client.contract_status }}
@@ -160,6 +192,12 @@
                   class="text-green-500 hover:text-green-700"
                 >
                   Edit
+                </button>
+                <button
+                  @click="openClientEmployeesModal(client.id)"
+                  class="text-blue-500 hover:text-blue-700"
+                >
+                  Employees
                 </button>
               </td>
             </tr>
@@ -500,20 +538,155 @@
         </div>
       </div>
     </div>
+
+    <!-- Client Employees Modal -->
+    <div
+      v-if="showClientEmployeesModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+    >
+      <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-100 rounded-lg">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-semibold text-gray-800">Client Employees</h2>
+              <p class="text-sm text-gray-500">Track monthly employee count</p>
+            </div>
+          </div>
+          <button
+            @click="closeClientEmployeesModal"
+            class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Year Selector -->
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <div class="flex items-center gap-4">
+            <label class="text-sm font-medium text-gray-700">Select Year:</label>
+            <select
+              v-model="selectedYear"
+              @change="handleYearChange"
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-medium text-gray-700 min-w-[120px]"
+            >
+              <option v-for="year in availableYears" :key="year" :value="year">
+                {{ year }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table Content -->
+        <div class="flex-1 overflow-y-auto px-6 py-4">
+          <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/2">
+                    Month
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/2">
+                    Number of Employees
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr 
+                  v-for="(date, index) in employeeDates" 
+                  :key="index"
+                  class="hover:bg-blue-50/50 transition-colors"
+                >
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                      <span class="text-sm font-medium text-gray-700">{{ date.dateLabel }}</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <input
+                      type="number"
+                      v-model="date.numberOfEmployees"
+                      min="0"
+                      class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white hover:border-gray-300 transition-colors"
+                      placeholder="Enter count"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-between gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+          <div class="text-sm text-gray-500">
+            <span class="font-medium text-gray-700">Total:</span>
+            {{ employeeDates.reduce((sum, d) => sum + (Number(d.numberOfEmployees) || 0), 0) }} employees
+          </div>
+          <div class="flex items-center gap-3">
+            <button
+              @click="closeClientEmployeesModal"
+              class="px-4 py-2.5 text-gray-700 bg-white border border-gray-300 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              @click="handleSaveClientEmployees"
+              :disabled="clientsStore.loading"
+              class="px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            >
+              <span
+                v-if="clientsStore.loading"
+                class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+              ></span>
+              <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useClientsStore } from '@/stores/clientsStore'
 import { useConsultantsStore } from '@/stores/consultantsStore'
 import type { Client } from '@/services/clientsService'
+import { formatDate, formatMonthYear } from '@/helpers/dateFormat'
 
 const clientsStore = useClientsStore()
 const consultantsStore = useConsultantsStore()
 
 const showUpdateClientDetailsModal = ref(false)
+const showClientEmployeesModal = ref(false)
 const selectedClient = ref<Client | null>(null)
+const selectedClientId = ref<number | null>(null)
+const currentYear = new Date().getFullYear()
+const selectedYear = ref(currentYear)
+const employeeDates = ref<
+  { id: number; date: Date; dateLabel: string; numberOfEmployees: number }[]
+>([])
+
+// Generate years from 2010 to current year (descending order)
+const availableYears = computed(() => {
+  const years: number[] = []
+  for (let year = currentYear; year >= 2010; year--) {
+    years.push(year)
+  }
+  return years
+})
 
 onMounted(() => {
   clientsStore.fetchClients()
@@ -528,6 +701,52 @@ const openUpdateClientDetailsModal = (client: Client) => {
 const closeUpdateClientDetailsModal = () => {
   showUpdateClientDetailsModal.value = false
   selectedClient.value = null
+}
+
+const openClientEmployeesModal = async (clientId: number) => {
+  selectedClientId.value = clientId
+  selectedYear.value = currentYear
+  showClientEmployeesModal.value = true
+  await loadEmployeeData(clientId, selectedYear.value)
+}
+
+const loadEmployeeData = async (clientId: number, year: number) => {
+  employeeDates.value = []
+  const clientEmployees = await clientsStore.getClientEmployees(clientId, year)
+  for (let i = 0; i < 12; i++) {
+    let numberOfEmployees = 0
+    let id = 0
+    if (clientEmployees && clientEmployees[i]) {
+      numberOfEmployees = clientEmployees[i]?.number_of_employees || 0
+      id = clientEmployees[i]?.id || 0
+    }
+    employeeDates.value.push({
+      id: id,
+      date: new Date(year, i, 1),
+      dateLabel: formatMonthYear(new Date(year, i, 1)),
+      numberOfEmployees: numberOfEmployees,
+    })
+  }
+}
+
+const handleYearChange = async () => {
+  if (selectedClientId.value) {
+    await loadEmployeeData(selectedClientId.value, selectedYear.value)
+  }
+}
+
+const handleSaveClientEmployees = async () => {
+  if (selectedClientId.value) {
+    // TODO: Implement save functionality
+    console.log('Saving employee data:', employeeDates.value)
+    closeClientEmployeesModal()
+  }
+}
+
+const closeClientEmployeesModal = () => {
+  showClientEmployeesModal.value = false
+  selectedClientId.value = null
+  employeeDates.value = []
 }
 
 const handleUpdateClientDetails = async () => {

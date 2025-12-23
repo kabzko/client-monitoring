@@ -37,11 +37,26 @@ export const useClientsStore = defineStore('clients', () => {
     }
   }
 
+  async function getClientEmployees(clientId: number, year: number) {
+    loading.value = true
+    error.value = null
+    try {
+      const employees = await clientsService.getClientEmployees(clientId, year)
+      return employees
+    } catch (err: any) {
+      error.value = err.message || 'Failed to fetch client employees'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     clients,
     loading,
     error,
     fetchClients,
     updateClientDetails,
+    getClientEmployees,
   }
 })

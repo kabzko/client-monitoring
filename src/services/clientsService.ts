@@ -19,7 +19,6 @@ export interface Client {
   status: string
   assigned_consultant_id: number
   assigned_consultant_name: string
-  assigned_consultant_date: string
 }
 
 export interface UpdateCleintDetailsPayload {
@@ -38,6 +37,12 @@ export interface UpdateCleintDetailsPayload {
   assigned_consultant_id: number
 }
 
+export interface ClientEmployee {
+  id: number
+  date: string
+  number_of_employees: number
+}
+
 export const clientsService = {
   async getAll(): Promise<Client[]> {
     const response = await axios.get(`${API_URL}/get-available-clients/`)
@@ -49,6 +54,11 @@ export const clientsService = {
     payload: UpdateCleintDetailsPayload,
   ): Promise<Client> {
     const response = await axios.put(`${API_URL}/update-client-details/${clientId}/`, payload)
+    return response.data
+  },
+
+  async getClientEmployees(clientId: number, year: number): Promise<ClientEmployee[]> {
+    const response = await axios.get(`${API_URL}/get-client-employees/${clientId}/${year}/`)
     return response.data
   },
 }
