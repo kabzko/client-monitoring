@@ -98,7 +98,7 @@
                 STATUS
               </th>
               <th
-                class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.1)]"
+                class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.1)] min-w-[180px]"
               >
                 Actions
               </th>
@@ -185,20 +185,43 @@
                 {{ client.status }}
               </td>
               <td
-                class="px-2 py-2 whitespace-nowrap text-sm text-gray-500 sticky right-0 bg-white group-hover:bg-gray-50 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.1)]"
+                class="px-3 py-2 whitespace-nowrap text-sm sticky right-0 bg-white group-hover:bg-gray-50 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.1)]"
               >
-                <button
-                  @click="openUpdateClientDetailsModal(client)"
-                  class="text-green-500 hover:text-green-700"
-                >
-                  Edit
-                </button>
-                <button
-                  @click="openClientEmployeesModal(client.id)"
-                  class="text-blue-500 hover:text-blue-700"
-                >
-                  Employees
-                </button>
+                <div class="flex items-center gap-1.5">
+                  <!-- Edit Button -->
+                  <button
+                    @click="openUpdateClientDetailsModal(client)"
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 hover:border-emerald-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
+                    title="Edit client details"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                    <span>Edit</span>
+                  </button>
+
+                  <!-- Employees Button -->
+                  <button
+                    @click="openClientEmployeesModal(client.id)"
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    title="View employees"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                    <span>Employees</span>
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -546,11 +569,23 @@
     >
       <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
         <!-- Modal Header -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div
+          class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50"
+        >
           <div class="flex items-center gap-3">
             <div class="p-2 bg-blue-100 rounded-lg">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              <svg
+                class="w-5 h-5 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                />
               </svg>
             </div>
             <div>
@@ -562,8 +597,18 @@
             @click="closeClientEmployeesModal"
             class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              class="w-5 h-5 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -590,17 +635,21 @@
             <table class="w-full">
               <thead class="bg-gray-50">
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/2">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/2"
+                  >
                     Month
                   </th>
-                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/2">
+                  <th
+                    class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/2"
+                  >
                     Number of Employees
                   </th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-100">
-                <tr 
-                  v-for="(date, index) in employeeDates" 
+                <tr
+                  v-for="(date, index) in employeeDates"
                   :key="index"
                   class="hover:bg-blue-50/50 transition-colors"
                 >
@@ -626,10 +675,13 @@
         </div>
 
         <!-- Modal Footer -->
-        <div class="flex items-center justify-between gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+        <div
+          class="flex items-center justify-between gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl"
+        >
           <div class="text-sm text-gray-500">
             <span class="font-medium text-gray-700">Total:</span>
-            {{ employeeDates.reduce((sum, d) => sum + (Number(d.numberOfEmployees) || 0), 0) }} employees
+            {{ employeeDates.reduce((sum, d) => sum + (Number(d.numberOfEmployees) || 0), 0) }}
+            employees
           </div>
           <div class="flex items-center gap-3">
             <button
@@ -648,7 +700,12 @@
                 class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
               ></span>
               <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               Save Changes
             </button>
@@ -676,7 +733,7 @@ const selectedClientId = ref<number | null>(null)
 const currentYear = new Date().getFullYear()
 const selectedYear = ref(currentYear)
 const employeeDates = ref<
-  { id: number; date: Date; dateLabel: string; numberOfEmployees: number }[]
+  { id: number; date: string; dateLabel: string; numberOfEmployees: number }[]
 >([])
 
 // Generate years from 2010 to current year (descending order)
@@ -713,17 +770,24 @@ const openClientEmployeesModal = async (clientId: number) => {
 const loadEmployeeData = async (clientId: number, year: number) => {
   employeeDates.value = []
   const clientEmployees = await clientsStore.getClientEmployees(clientId, year)
-  for (let i = 0; i < 12; i++) {
+  for (let i = 1; i <= 12; i++) {
     let numberOfEmployees = 0
     let id = 0
     if (clientEmployees && clientEmployees[i]) {
       numberOfEmployees = clientEmployees[i]?.number_of_employees || 0
       id = clientEmployees[i]?.id || 0
     }
+    const date = new Date(year, i - 1, 15)
+    const dateString =
+      date.getFullYear() +
+      '-' +
+      String(date.getMonth() + 1).padStart(2, '0') +
+      '-' +
+      String(date.getDate()).padStart(2, '0')
     employeeDates.value.push({
       id: id,
-      date: new Date(year, i, 1),
-      dateLabel: formatMonthYear(new Date(year, i, 1)),
+      date: dateString,
+      dateLabel: formatMonthYear(date),
       numberOfEmployees: numberOfEmployees,
     })
   }
@@ -737,9 +801,20 @@ const handleYearChange = async () => {
 
 const handleSaveClientEmployees = async () => {
   if (selectedClientId.value) {
-    // TODO: Implement save functionality
-    console.log('Saving employee data:', employeeDates.value)
-    closeClientEmployeesModal()
+    clientsStore
+      .createUpdateClientEmployee({
+        client_id: selectedClientId.value,
+        client_employee_data: employeeDates.value,
+      })
+      .then(() => {
+        closeClientEmployeesModal()
+      })
+      .catch((err: any) => {
+        console.error(err)
+      })
+      .finally(() => {
+        clientsStore.loading = false
+      })
   }
 }
 

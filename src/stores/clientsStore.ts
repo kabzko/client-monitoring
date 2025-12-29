@@ -4,6 +4,7 @@ import {
   clientsService,
   type Client,
   type UpdateCleintDetailsPayload,
+  type CreateUpdateClientEmployeePayload,
 } from '@/services/clientsService'
 
 export const useClientsStore = defineStore('clients', () => {
@@ -51,6 +52,20 @@ export const useClientsStore = defineStore('clients', () => {
     }
   }
 
+  async function createUpdateClientEmployee(payload: CreateUpdateClientEmployeePayload) {
+    loading.value = true
+    error.value = null
+    try {
+      const employee = await clientsService.createUpdateClientEmployee(payload)
+      return employee
+    } catch (err: any) {
+      error.value = err.message || 'Failed to create client employee'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     clients,
     loading,
@@ -58,5 +73,6 @@ export const useClientsStore = defineStore('clients', () => {
     fetchClients,
     updateClientDetails,
     getClientEmployees,
+    createUpdateClientEmployee,
   }
 })

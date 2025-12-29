@@ -43,6 +43,11 @@ export interface ClientEmployee {
   number_of_employees: number
 }
 
+export interface CreateUpdateClientEmployeePayload {
+  client_id: number
+  client_employee_data: any[]
+}
+
 export const clientsService = {
   async getAll(): Promise<Client[]> {
     const response = await axios.get(`${API_URL}/get-available-clients/`)
@@ -59,6 +64,13 @@ export const clientsService = {
 
   async getClientEmployees(clientId: number, year: number): Promise<ClientEmployee[]> {
     const response = await axios.get(`${API_URL}/get-client-employees/${clientId}/${year}/`)
+    return response.data
+  },
+
+  async createUpdateClientEmployee(
+    payload: CreateUpdateClientEmployeePayload,
+  ): Promise<ClientEmployee> {
+    const response = await axios.post(`${API_URL}/create-update-client-employee/`, payload)
     return response.data
   },
 }
