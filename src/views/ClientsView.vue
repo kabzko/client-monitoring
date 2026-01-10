@@ -4,6 +4,117 @@
       <h1 class="text-xl md:text-2xl font-bold text-gray-800">Clients</h1>
     </div>
 
+    <!-- Filters Section -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- Search Field -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+          <div class="relative">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search by name..."
+              class="w-full px-3 py-2 pl-9 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            />
+            <svg
+              class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Consultant Filter -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Consultant</label>
+          <select
+            v-model="filterConsultant"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+          >
+            <option value="">All Consultants</option>
+            <option
+              v-for="consultant in consultantsStore.consultants"
+              :key="consultant.id"
+              :value="consultant.id"
+            >
+              {{ consultant.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Contract Status Filter -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Contract Status</label>
+          <select
+            v-model="filterContractStatus"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+          >
+            <option value="">All Statuses</option>
+            <option value="WITHIN CONTRACT">WITHIN CONTRACT</option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select
+            v-model="filterStatus"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+          >
+            <option value="">All Statuses</option>
+            <option value="GO-LIVE">GO-LIVE</option>
+          </select>
+        </div>
+
+        <!-- Partner Filter -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Partner</label>
+          <select
+            v-model="filterPartner"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+          >
+            <option value="">All Partners</option>
+            <option value="Globe">Globe</option>
+            <option value="RCBC">RCBC</option>
+            <option value="SME">SME</option>
+            <option value="TAI">TAI</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Clear Filters Button -->
+      <div class="mt-4 flex items-center justify-between">
+        <p class="text-sm text-gray-600">
+          Showing <span class="font-semibold">{{ filteredClients.length }}</span> of
+          <span class="font-semibold">{{ clientsStore.clients.length }}</span> clients
+        </p>
+        <button
+          v-if="hasActiveFilters"
+          @click="clearFilters"
+          class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+          Clear Filters
+        </button>
+      </div>
+    </div>
+
     <!-- Loading State -->
     <div v-if="clientsStore.loading" class="flex items-center justify-center py-12">
       <div
@@ -106,7 +217,7 @@
           </thead>
           <tbody class="divide-y divide-gray-200">
             <tr
-              v-for="client in clientsStore.clients"
+              v-for="client in filteredClients"
               :key="client.id"
               class="group hover:bg-gray-50"
             >
@@ -270,7 +381,7 @@
               v-model="selectedClient.assigned_consultant_id"
               class="w-full px-3 py-2.5 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm"
             >
-              <option value="">Choose a consultant...</option>
+              <option value="" disabled>Choose a consultant...</option>
               <option
                 v-for="consultant in consultantsStore.consultants"
                 :key="consultant.id"
@@ -717,11 +828,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useClientsStore } from '@/stores/clientsStore'
 import { useConsultantsStore } from '@/stores/consultantsStore'
 import type { Client } from '@/services/clientsService'
 import { formatDate, formatMonthYear } from '@/helpers/dateFormat'
+
+// Filter states
+const searchQuery = ref('')
+const filterConsultant = ref('')
+const filterContractStatus = ref('')
+const filterStatus = ref('')
+const filterPartner = ref('')
 
 const clientsStore = useClientsStore()
 const consultantsStore = useConsultantsStore()
@@ -745,8 +863,63 @@ const availableYears = computed(() => {
   return years
 })
 
+// Use clients directly from store (now filtered by backend)
+const filteredClients = computed(() => clientsStore.clients)
+
+// Check if any filters are active
+const hasActiveFilters = computed(() => {
+  return !!(
+    searchQuery.value.trim() ||
+    filterConsultant.value ||
+    filterContractStatus.value ||
+    filterStatus.value ||
+    filterPartner.value
+  )
+})
+
+// Clear all filters
+const clearFilters = () => {
+  searchQuery.value = ''
+  filterConsultant.value = ''
+  filterContractStatus.value = ''
+  filterStatus.value = ''
+  filterPartner.value = ''
+}
+
+// Fetch clients with current filters
+const fetchClientsWithFilters = () => {
+  const params: any = {}
+  
+  if (searchQuery.value.trim()) {
+    params.search = searchQuery.value.trim()
+  }
+  if (filterConsultant.value) {
+    params.assigned_consultant_id = Number(filterConsultant.value)
+  }
+  if (filterContractStatus.value) {
+    params.contract_status = filterContractStatus.value
+  }
+  if (filterStatus.value) {
+    params.status = filterStatus.value
+  }
+  if (filterPartner.value) {
+    params.partner_type = filterPartner.value
+  }
+  
+  clientsStore.fetchClients(params)
+}
+
+// Watch for filter changes and refetch
+watch(
+  [searchQuery, filterConsultant, filterContractStatus, filterStatus, filterPartner],
+  () => {
+    fetchClientsWithFilters()
+  },
+  { deep: true }
+)
+
 onMounted(() => {
-  clientsStore.fetchClients()
+  fetchClientsWithFilters()
   consultantsStore.fetchConsultants()
 })
 

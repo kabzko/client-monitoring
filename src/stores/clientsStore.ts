@@ -5,6 +5,7 @@ import {
   type Client,
   type UpdateCleintDetailsPayload,
   type CreateUpdateClientEmployeePayload,
+  type ClientsQueryParams,
 } from '@/services/clientsService'
 
 export const useClientsStore = defineStore('clients', () => {
@@ -12,11 +13,11 @@ export const useClientsStore = defineStore('clients', () => {
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  async function fetchClients() {
+  async function fetchClients(params?: ClientsQueryParams) {
     loading.value = true
     error.value = null
     try {
-      clients.value = await clientsService.getAll()
+      clients.value = await clientsService.getAll(params)
     } catch (err: any) {
       error.value = err.message || 'Failed to fetch clients'
     } finally {
