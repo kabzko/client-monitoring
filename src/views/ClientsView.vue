@@ -59,6 +59,8 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
           >
             <option value="">All Statuses</option>
+            <option value="FOR RENEWAL">FOR RENEWAL</option>
+            <option value="RENEWED">RENEWED</option>
             <option value="WITHIN CONTRACT">WITHIN CONTRACT</option>
           </select>
         </div>
@@ -71,7 +73,13 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
           >
             <option value="">All Statuses</option>
+            <option value="1st PARALLEL RUN">1st PARALLEL RUN</option>
+            <option value="2nd PARALLEL RUN">2nd PARALLEL RUN</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="For KICK-OFF">For KICK-OFF</option>
             <option value="GO-LIVE">GO-LIVE</option>
+            <option value="Training">Training</option>
+            <option value="SET-UP">SET-UP</option>
           </select>
         </div>
 
@@ -623,6 +631,8 @@
                   class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                 >
                   <option value="">Select status...</option>
+                  <option value="FOR RENEWAL">FOR RENEWAL</option>
+                  <option value="RENEWED">RENEWED</option>
                   <option value="WITHIN CONTRACT">WITHIN CONTRACT</option>
                 </select>
               </div>
@@ -633,7 +643,13 @@
                   class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
                 >
                   <option value="">Select status...</option>
+                  <option value="1st PARALLEL RUN">1st PARALLEL RUN</option>
+                  <option value="2nd PARALLEL RUN">2nd PARALLEL RUN</option>
+                  <option value="COMPLETED">COMPLETED</option>
+                  <option value="For KICK-OFF">For KICK-OFF</option>
                   <option value="GO-LIVE">GO-LIVE</option>
+                  <option value="Training">Training</option>
+                  <option value="SET-UP">SET-UP</option>
                 </select>
               </div>
             </div>

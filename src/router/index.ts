@@ -4,6 +4,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import ClientsView from '@/views/ClientsView.vue'
 import ConsultantsView from '@/views/ConsultantsView.vue'
+import PartnerView from '@/views/PartnerView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,22 @@ const router = createRouter({
           path: 'consultants',
           name: 'consultants',
           component: ConsultantsView
+        },
+        {
+          path: 'partner/:partner',
+          name: 'partner',
+          component: PartnerView,
+          beforeEnter: (to, _from, next) => {
+            // Validate partner parameter
+            const validPartners = ['globe', 'rcbc', 'sme', 'tai']
+            const partner = (to.params.partner as string).toLowerCase()
+            
+            if (validPartners.includes(partner)) {
+              next()
+            } else {
+              next('/dashboard')
+            }
+          }
         }
       ]
     }
