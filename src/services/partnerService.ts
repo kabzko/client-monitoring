@@ -30,7 +30,7 @@ export const partnerService = {
       queryParams.append('assigned_consultant_id', params.assigned_consultant_id.toString())
     }
     
-    const url = `${API_URL}/get-available-clients/?${queryParams.toString()}`
+    const url = `${API_URL}/get-available-clients/public/?${queryParams.toString()}`
     const response = await axios.get(url)
     return response.data
   },
